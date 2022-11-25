@@ -6,6 +6,7 @@ import { ApolloServer } from "apollo-server-express";
 import { createServer } from "http";
 import cors from "cors";
 import { generateSchema } from "./generate-schema";
+import { morganMiddleware } from "./modules/middlewares/morgan";
 
 const configuredPort = process.env.PORT || "8080";
 
@@ -19,6 +20,7 @@ const startServer = async (port: string | undefined) => {
   });
 
   app.use(cors());
+  app.use(morganMiddleware());
   await server.start();
 
   server.applyMiddleware({ app, path: "/graphql" });

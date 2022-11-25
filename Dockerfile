@@ -7,6 +7,5 @@ WORKDIR /usr/src/app
 
 COPY ./ ./usr/src/app/
 
-# @TODO: 2.5Gb image is too big
 EXPOSE 8080
 CMD [ "yarn", "start" ]

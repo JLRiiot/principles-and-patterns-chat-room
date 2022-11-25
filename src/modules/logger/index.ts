@@ -1,25 +1,18 @@
 import Container from "typedi";
 import { createLogger, format, transports } from "winston";
+import { ElasticsearchTransport } from "winston-elasticsearch";
+
+const esTransportOpts = {
+  level: "debug",
+  clientOpts: { node: "http://chat-log-elasticsearch-1:9200" },
+};
+const esTransport = new ElasticsearchTransport(esTransportOpts);
+esTransport.flush();
 
 const logger = createLogger({
-  level: "info",
-  format: format.combine(
-    format.timestamp({
-      format: "YYYY-MM-DD HH:mm:ss",
-    }),
-    format.errors({ stack: true }),
-    format.splat(),
-    format.json()
-  ),
+  format: format.combine(format.errors({ stack: true })),
   defaultMeta: { service: "chatroom" },
-  transports: [
-    //
-    // - Write to all logs with level `info` and below to `quick-start-combined.log`.
-    // - Write all logs error (and below) to `quick-start-error.log`.
-    //
-    new transports.File({ filename: "chatroom-error.log", level: "error" }),
-    new transports.File({ filename: "chatroom-combined.log" }),
-  ],
+  transports: [esTransport],
 });
 
 //
